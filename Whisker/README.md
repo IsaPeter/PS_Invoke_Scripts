@@ -7,7 +7,7 @@ Used the following script to pack: https://gist.github.com/Mayfly277/2e5f34a7e7f
 ## Usage
 
 ```bash
-PS C:\Users\isap\Desktop\Tools\workdir> Invoke-Whisker -Command ""
+PS C:\workdir> Invoke-Whisker -Command ""
 
 Whisker is a C# tool for taking over Active Directory user and computer accounts by manipulating their
 msDS-KeyCredentialLink attribute, effectively adding Shadow Credentials to the target account.
